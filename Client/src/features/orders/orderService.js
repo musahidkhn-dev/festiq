@@ -1,29 +1,25 @@
-import axios from "axios"
+import api from "../../utils/axiosConfig"
 
-let API_URL = "/api/order"
-
-const fetchTickets = async (token) => {
-
-    let options = {
-        headers : {
-            Authorization : `Bearer ${token}`
-        }
-    }
-    // console.log("TOKEN:", token)
-
-    const response = await axios.get(API_URL, options)
-    // consol   e.log(response.data)
+const fetchTickets = async () => {
+    const response = await api.get("/order")
     return response.data
-     
 }
 
+const fetchTicket = async (tid) => {
+    const response = await api.get(`/order/${tid}`)
+    return response.data
+}
 
-// const fetchTicket = (tid, token) => {}
+const bookTicket = async (eid) => {
+    const response = await api.post(`/order/${eid}`)
+    return response.data
+}
 
-// const bookTicket = (formData, token) => {}
+const cancelTicket = async (tid) => {
+    const response = await api.put(`/order/${tid}`)
+    return response.data
+}
 
-//  const cancelTicket = (tid, token) => {}
+const orderService = { fetchTickets, fetchTicket, bookTicket, cancelTicket } 
 
- const orderService = {fetchTickets} 
-
- export default orderService
+export default orderService

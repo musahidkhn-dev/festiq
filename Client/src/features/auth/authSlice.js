@@ -18,7 +18,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers : (builder) => {
       builder
-      .addCase(registerUser.pending, (state, action) => {
+      .addCase(registerUser.pending, (state) => {
         state.isLoading = true 
         state.isSuccess = false
         state.isError = false
@@ -35,7 +35,7 @@ const authSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
-        .addCase(loginUser.pending, (state, action) => {
+        .addCase(loginUser.pending, (state) => {
         state.isLoading = true 
         state.isSuccess = false
         state.isError = false
@@ -52,7 +52,7 @@ const authSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false 
         state.isSuccess = false
         state.isError = false
@@ -62,7 +62,7 @@ const authSlice = createSlice({
    }
 });
 
-export const {} = authSlice.actions
+// Removed empty export
 
 export default authSlice.reducer
 

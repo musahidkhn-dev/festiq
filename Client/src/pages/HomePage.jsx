@@ -3,35 +3,26 @@ import { MapPin, Search, Flame } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import EventCard from '../components/EventCard'
-// import { events } from '../data/mockData'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { getEvents } from '../features/event/eventSlice'
+import { useEvents } from '../hooks/queries/useEvents'
 import LoadingScreen from '../components/LoadingScreen'
 
 
 
 export default function HomePage() {
+  const { data, isLoading, isError } = useEvents()
+  const events = data || []
 
-  const {events , eventLoading, eventSuccess, eventError, eventErrorMessage} = useSelector(state => state.event)
-
-  const dispatch  = useDispatch()
-
-
-
-
-
-  useEffect(() => {
-//Fetch Events
-dispatch(getEvents())
-
-  },[])
-
-
-  if(eventLoading){
+  if(isLoading){
     return <LoadingScreen/>
   }
 
+  if (isError) {
+    return (
+        <div className="bg-[#0A0A0F] min-h-screen text-white flex items-center justify-center">
+            <p className="text-red-400">Error loading events. Please try again later.</p>
+        </div>
+    )
+  }
 
   return (
     <div className="bg-[#0A0A0F] min-h-screen text-white font-['DM_Sans']">
@@ -134,11 +125,15 @@ dispatch(getEvents())
           <Link to="/events" className="text-violet-400 text-sm hover:underline">View All →</Link>
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4" id="trending-scroll">
-          {events.map(event => (
-            <div key={event._id} className="min-w-[320px] flex-shrink-0">
-              <EventCard event={event} />
-            </div>
-          ))}
+          {events.length > 0 ? (
+            events.map(event => (
+              <div key={event._id} className="min-w-[320px] flex-shrink-0">
+                <EventCard event={event} />
+              </div>
+            ))
+          ) : (
+            <div className="w-full text-center py-10 text-gray-500">No events found holding trending metadata.</div>
+          )}
         </div>
       </section>
 
@@ -165,36 +160,37 @@ dispatch(getEvents())
       <section className="max-w-7xl mx-auto mt-16 px-6">
         <h2 className="text-2xl font-bold text-white mb-6">All Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map(event => (
-            <EventCard key={event._id} event={event} />
-          ))}
+          {events.length > 0 ? (
+            events.map(event => (
+              <EventCard key={event._id} event={event} />
+            ))
+          ) : (
+             <div className="col-span-full text-center py-20">
+               <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl p-10 h-[300px] flex items-center justify-center">
+                 <p className="text-gray-400">No events available at this location right now.</p>
+               </div>
+             </div>
+          )}
         </div>
       </section>
 
-      {/* Featured Event Banner */}
-      <section className="max-w-7xl mx-auto mt-20 px-6">
-        <div className="relative rounded-3xl overflow-hidden h-[400px]">
-          <img src={events[0]?.eventImage} alt={events[0]?.title} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
-          <div className="absolute left-8 bottom-8 z-10">
-            <span className="bg-[#06FFA5]/10 text-[#06FFA5] text-xs px-3 py-1 rounded-full border border-[#06FFA5]/20">{events[0]?.status}</span>
-            <h3 className="font-['Bebas_Neue'] text-5xl text-white mt-2 tracking-wider">{events[0]?.title}</h3>
-            <p className="text-gray-300 text-sm mt-2">{events[0]?.eventDate} • {events[0]?.eventLocation}</p>
-            <p className="text-amber-400 text-2xl font-bold mt-2">₹{events[0]?.ticketPrice?.toLocaleString()}</p>
-            <Link to={`/book/${events[0]?._id}`} className="inline-block mt-4 bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-6 py-3 font-semibold transition-all duration-200 shadow-lg shadow-violet-500/20 text-sm">
-              Book Tickets →
-            </Link>
-          </div>
-          <div className="absolute right-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
-            <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">Featuring</p>
-            {/* <div className="flex flex-col gap-2">
-              {events[0]?.performers?.map(p => (
-                <span key={p} className="bg-white/10 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full border border-white/10">{p}</span>
-              ))}
-            </div> */}
-          </div>
-        </div>
-      </section>
+      {events.length > 0 && (
+          <section className="max-w-7xl mx-auto mt-20 px-6">
+            <div className="relative rounded-3xl overflow-hidden h-[400px]">
+              <img src={events[0]?.eventImage} alt={events[0]?.title} className="absolute inset-0 w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+              <div className="absolute left-8 bottom-8 z-10">
+                <span className="bg-[#06FFA5]/10 text-[#06FFA5] text-xs px-3 py-1 rounded-full border border-[#06FFA5]/20">{events[0]?.status}</span>
+                <h3 className="font-['Bebas_Neue'] text-5xl text-white mt-2 tracking-wider">{events[0]?.title}</h3>
+                <p className="text-gray-300 text-sm mt-2">{events[0]?.eventDate} • {events[0]?.eventLocation}</p>
+                <p className="text-amber-400 text-2xl font-bold mt-2">₹{events[0]?.ticketPrice?.toLocaleString()}</p>
+                <Link to={`/book/${events[0]?._id}`} className="inline-block mt-4 bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-6 py-3 font-semibold transition-all duration-200 shadow-lg shadow-violet-500/20 text-sm">
+                  Book Tickets →
+                </Link>
+              </div>
+            </div>
+          </section>
+      )}
 
       <Footer />
     </div>

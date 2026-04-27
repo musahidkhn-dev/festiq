@@ -1,62 +1,28 @@
-import axios from "axios";
+import api from "../../utils/axiosConfig";
 
-const API_URL = '/api/admin'
-
-const fetchAllUsers = async (token) => {
- 
-
-  let options = {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    }
-
-  
-    const response = await axios.get(API_URL + "/users", options)
+const fetchAllUsers = async () => {
+    const response = await api.get("/admin/users")
     return response.data 
 }
-const fetchAllEvents = async (token) => {
- 
-  let options = {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    }
 
-    console.log("Fetching Events");
+const fetchAllEvents = async () => {
+    const response = await api.get("/admin/events")
+    return response.data 
 };
 
-const fetchAllOrders = async (token) => {
- 
-  let options = {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    }
-
-    console.log("Fetching Orders");
+const fetchAllOrders = async () => {
+    const response = await api.get("/admin/orders")
+    return response.data 
 };
 
-const fetchAllRatings = async (token) => {
- 
-  let options = {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    }
-
-    console.log("Fetching Ratings");
+const fetchAllRatings = async () => {
+    const response = await api.get("/admin/ratings")
+    return response.data 
 };
 
-const fetchAllCoupons = async (token) => {
- 
-    let options = {
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    }
- 
-
+const fetchAllCoupons = async () => {
+    const response = await api.get("/admin/coupons")
+    return response.data 
 };
 
 export const adminService = {

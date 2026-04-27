@@ -1,49 +1,39 @@
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Ticket, Calendar, MapPin, Armchair, Tag, Download, Share2, X, QrCode } from 'lucide-react'
 import Navbar from '../components/Navbar'
-// import { myTickets } from '../data/mockData'
-
-import { getTickets } from '../features/orders/orderSlice'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useOrders } from '../hooks/queries/useOrders'
 import TicketCard from '../components/TicketCard'
 import LoadingScreen from '../components/LoadingScreen'
-import { toast } from 'react-toastify'
 
 
 
 export default function MyTickets() {
 
   const {user} = useSelector(state => state.auth)
-  const {orders, orderLoading, orderError, orderErrorMessage} = useSelector(state => state.order)
-
-      
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
-
   useEffect(() => {
-    dispatch(getTickets())
-
     if(!user){
       navigate("/login")
     }
-
-
   },[user])
-  useEffect(() => {
-  
-  if(orderError && orderErrorMessage){
-    toast.error(orderErrorMessage, {position : "top-center" , theme : "dark"})
-  }
-  },[orderError,orderErrorMessage])
 
-  if(orderLoading){
-    return (
-      <LoadingScreen text='Loading Tickets...'/> 
-    )
+  const { data, isLoading, isError } = useOrders()
+  const orders = data || []
+
+  if(isLoading){
+    return <LoadingScreen text='Loading Tickets...'/> 
   }
 
+  if (isError) {
+      return (
+          <div className="bg-[#0A0A0F] min-h-screen text-white flex items-center justify-center">
+              <p className="text-red-400">Failed to load tickets.</p>
+          </div>
+      )
+  }
 
   return (
     <div className="bg-[#0A0A0F] min-h-screen text-white font-['DM_Sans']">

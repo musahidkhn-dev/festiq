@@ -3,28 +3,25 @@ import { Search, LayoutGrid, List, ChevronLeft, ChevronRight, X } from 'lucide-r
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import EventCard from '../components/EventCard'
-// import { events } from '../data/mockData'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { getEvents } from '../features/event/eventSlice'
+import { useEvents } from '../hooks/queries/useEvents'
 import LoadingScreen from '../components/LoadingScreen'
 
 
 export default function EventsPage() {
-const {events , eventLoading, eventSuccess, eventError, eventErrorMessage} = useSelector(state => state.event)
+  const { data, isLoading, isError } = useEvents()
+  const events = data || []
 
-  const dispatch  = useDispatch()
+  if(isLoading){
+    return <LoadingScreen/>
+  }
 
-useEffect(() => {
-//Fetch Events
-dispatch(getEvents())
- 
-  },[])
-
-   if(eventLoading){
-      return <LoadingScreen/>
-    }
-
+  if (isError) {
+    return (
+        <div className="bg-[#0A0A0F] min-h-screen text-white flex items-center justify-center">
+            <p className="text-red-400">Error loading events. Please try again later.</p>
+        </div>
+    )
+  }
 
   return (
     <div className="bg-[#0A0A0F] min-h-screen text-white font-['DM_Sans']">
@@ -125,10 +122,18 @@ dispatch(getEvents())
 
           {/* Event Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map(event => (
+          {events.length > 0 ? (
+            events.map(event => (
               <EventCard key={event._id} event={event} />
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-20">
+              <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl p-10 h-[300px] flex items-center justify-center">
+                 <p className="text-gray-400">No events found matching your criteria.</p>
+              </div>
+            </div>
+          )}
+        </div>
 
           {/* Pagination */}
           <div className="flex justify-center gap-2 mt-8">

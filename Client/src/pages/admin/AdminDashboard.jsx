@@ -1,48 +1,33 @@
 import { Calendar, TrendingUp, Users, Ticket } from 'lucide-react'
 
 import { barHeights } from './constants/badgeStyles'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { toast } from 'react-toastify'
+
 import LoadingScreen from '../../components/LoadingScreen'
-import { getAllUsers } from '../../features/admin/adminSlice'
+import { useAdminUsers, useAdminEvents, useAdminOrders } from '../../hooks/queries/useAdmin'
 import { adminStats, revenueChart } from '../../data/mockData'
 
 export default function AdminDashboard() {
 
-  const {users, events, orders, adminLoading, adminSuccess, adminError, adminErrorMessage} = useSelector(state => state.admin)
-  // console.log(events)
-  // console.log(users)
-  console.log(orders)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    
-   if(!adminError){
-     //Fetch Users
-    dispatch(getAllUsers())
-   }
-
-
-    if(adminError, adminErrorMessage){
-      toast.error(adminErrorMessage, {position : "top-center", theme : "dark"})
-    }
-
-  },[adminError , adminErrorMessage])
-
-
-  if(adminLoading){
+  const { data: users, isLoading: usersLoading } = useAdminUsers()
+  const { data: events, isLoading: eventsLoading } = useAdminEvents()
+  const { data: orders, isLoading: ordersLoading } = useAdminOrders()
+  if(usersLoading || eventsLoading || ordersLoading){
     return <LoadingScreen/>
   }
+
+  // Safe fallbacks if backend array structures mismatch
+  const SafeUsersCount = users ? users.totalUsers : 0;
+  const SafeEventsCount = events ? events.totalEvents : 0;
+
   return (
     <div>
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-8">
         {[
-          { icon: Calendar, value: events?.totalEvents, label: "Total Events", color: "bg-violet-600/20 text-violet-400", growth: "12% ↑" },
+          { icon: Calendar, value: SafeEventsCount, label: "Total Events", color: "bg-violet-600/20 text-violet-400", growth: "12% ↑" },
           { icon: TrendingUp, value: adminStats.totalRevenue, label: "Total Revenue", color: "bg-emerald-500/20 text-emerald-400", growth: "8% ↑" },
-          { icon: Users, value: users.totalUsers?.toLocaleString(), label: "Total Users", color: "bg-blue-500/20 text-blue-400", growth: "15% ↑" },
+          { icon: Users, value: SafeUsersCount?.toLocaleString(), label: "Total Users", color: "bg-blue-500/20 text-blue-400", growth: "15% ↑" },
           { icon: Ticket, value: adminStats.ticketsSold.toLocaleString(), label: "Tickets Sold", color: "bg-amber-500/20 text-amber-400", growth: "22% ↑" }
         ].map(card => (
           <div key={card.label} className="bg-[#12121A] border border-white/10 rounded-2xl p-6">

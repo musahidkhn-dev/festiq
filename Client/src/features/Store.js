@@ -1,10 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import auth from "./auth/authSlice"
-import event from "./event/eventSlice"
-import order from "./orders/orderSlice"
-import admin from "./admin/adminSlice"
+
+// We removed event, order, and admin slices as they are now handled by React Query
 const store = configureStore({
-    reducer : { auth , event, order, admin}
+    reducer : { auth }
 })
 
 export default store
