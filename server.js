@@ -106,8 +106,8 @@ app.post("/api/chat", protect.optional, giveAnswer);
 // Serve Frontend Build
 app.use(express.static(path.join(__dirname, "Client/dist")));
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "Client/dist/index.html"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "Client/dist", "index.html"));
 });
 
 // Error Handler

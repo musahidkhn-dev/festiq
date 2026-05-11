@@ -5,12 +5,8 @@ import { toast } from 'react-toastify';
  * Axios Instance Configuration
  * Standardized to hit the backend port 8080 directly with CORS credentials.
  */
-const API_BASE_URL = import.meta.env.PROD
-  ? `${window.location.origin}/api`
-  : 'http://localhost:8080/api';
-
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: '/api',
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
