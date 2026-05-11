@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
 import ChatPage from "./components/ChatPage";
-import PrivateComponent from "./components/privateComponent";
+import PrivateComponent from "./components/PrivateComponent";
 import { ToastContainer } from "react-toastify";
 import Footer from "./components/Footer";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -87,7 +87,7 @@ const AnimatedRoutes = () => {
             <Route path="tickets" element={withSuspense(MyTickets)} />
             <Route path="profile" element={withSuspense(ProfilePage)} />
           </Route>
-          
+
           {/* Creator Routes */}
           <Route element={<PrivateComponent />}>
             <Route path="/host-event" element={withSuspense(HostEvent)} />
@@ -97,7 +97,7 @@ const AnimatedRoutes = () => {
         </Route>
 
         <Route path="/chat" element={<ChatPage />} />
-        
+
         {/* Admin layout remains static, children are lazy */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={withSuspense(AdminDashboard)} />
@@ -111,7 +111,7 @@ const AnimatedRoutes = () => {
           <Route path="settings" element={withSuspense(AdminSettings)} />
           <Route path="profile" element={withSuspense(ProfilePage)} />
         </Route>
-        
+
         <Route path="*" element={withSuspense(NotFound)} />
       </Routes>
     </AnimatePresence>
