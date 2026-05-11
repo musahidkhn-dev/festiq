@@ -105,10 +105,12 @@ console.log("SERVER: Registering /api/chat route with optional protection...");
 app.post("/api/chat", protect.optional, giveAnswer);
 
 // Serve Frontend Build
-app.use(express.static(path.join(__dirname, "Client/dist")));
+const rootDir = process.cwd();
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "Client/dist/index.html"));
+app.use(express.static(path.join(rootDir, "Client/dist")));
+
+app.use((req, res) => {
+  res.sendFile(path.join(rootDir, "Client/dist/index.html"));
 });
 
 // Error Handler
