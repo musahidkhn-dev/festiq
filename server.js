@@ -6,6 +6,12 @@ import colors from "colors";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Local Imports
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -68,11 +74,6 @@ app.use("/api/auth", authLimiter);
 
 console.log("SERVER: Registered GEMINI_API_KEY Check -", !!process.env.GEMINI_API_KEY);
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "WELCOME TO FESTIQ API",
-  });
-});
 
 app.get("/test", (req, res) => {
   res.json({
@@ -102,6 +103,13 @@ app.use("/api/comment", commentRoutes)
 // Chat Routes
 console.log("SERVER: Registering /api/chat route with optional protection...");
 app.post("/api/chat", protect.optional, giveAnswer);
+
+// Serve Frontend Build
+app.use(express.static(path.join(__dirname, "Client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "Client/dist/index.html"));
+});
 
 // Error Handler
 app.use(errorHandler);
