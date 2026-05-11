@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled", "expired"],
+      enum: ["pending", "confirmed", "cancelled", "expired", "rejected"],
       required: true,
       default: "pending",
     },
@@ -26,9 +26,38 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    couponCode: {
+      type: String,
+      default: null
+    },
+    discountPercentage: {
+      type: Number,
+      default: 0
+    },
+    subtotal: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    platformFee: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    creatorEarning: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    adminEarning: {
+      type: Number,
+      required: true,
+      default: 0
+    },
     billedAmount: {
       type: Number,
       required: true,
+      default: 0
     },
   },
   {

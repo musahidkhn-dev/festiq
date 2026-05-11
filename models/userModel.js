@@ -29,10 +29,19 @@ const userSchema = new mongoose.Schema({
         default : false,
         required : true
     },
+    isCreator : {
+        type : Boolean,
+        default : false,
+        required : true
+    },
     credits : {
         type : Number,
-        default : 0,
+        default : 10000,
         required : true  
+    },
+    profilePicture : {
+        type : String,
+        default : null
     }
 },{
     timestamps : true 

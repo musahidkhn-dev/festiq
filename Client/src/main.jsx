@@ -5,12 +5,12 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import store from './features/Store.js'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, 
-      cacheTime: 10 * 60 * 1000, 
       retry: 1,
       refetchOnWindowFocus: false,
     },
@@ -18,11 +18,14 @@ const queryClient = new QueryClient({
 })
 
 createRoot(document.getElementById('root')).render(
-<BrowserRouter>
- <Provider store={store}>
-  <QueryClientProvider client={queryClient}>
-   <App/>
-  </QueryClientProvider>
- </Provider>
-</BrowserRouter>
+<ErrorBoundary>
+  <BrowserRouter>
+   <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
+     <App/>
+    </QueryClientProvider>
+   </Provider>
+  </BrowserRouter>
+</ErrorBoundary>
 )
+

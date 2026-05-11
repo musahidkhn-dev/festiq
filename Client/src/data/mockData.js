@@ -1,7 +1,7 @@
 export const currentUser = {
   id: "u001",
   name: "Arjun Sharma",
-  email: "arjun@moodgo.in",
+  email: "arjun@festiq.in",
   city: "Mumbai",
   avatar: "https://i.pravatar.cc/150?img=8",
   role: "user",
@@ -130,7 +130,7 @@ export const myTickets = {
       date: "April 12, 2025",
       venue: "Vagator Beach, Goa",
       seat: "GA - Section B",
-      ticketCode: "MOODGO-SUB-2025-001",
+      ticketCode: "FESTIQ-SUB-2025-001",
       type: "VIP",
       price: 2999,
       status: "confirmed",
@@ -142,7 +142,7 @@ export const myTickets = {
       date: "April 5, 2025",
       venue: "Wankhede Stadium, Mumbai",
       seat: "Stand C - Row 12 - Seat 45",
-      ticketCode: "MOODGO-IPL-2025-002",
+      ticketCode: "FESTIQ-IPL-2025-002",
       type: "General",
       price: 999,
       status: "confirmed",
@@ -156,7 +156,7 @@ export const myTickets = {
       date: "January 18, 2025",
       venue: "DY Patil Stadium, Mumbai",
       seat: "Pit - Zone A",
-      ticketCode: "MOODGO-COLD-2025-003",
+      ticketCode: "FESTIQ-COLD-2025-003",
       type: "VVIP",
       price: 12999,
       status: "attended",
@@ -169,7 +169,7 @@ export const myTickets = {
       eventTitle: "Comedy Night — Bangalore",
       date: "February 10, 2025",
       venue: "Phoenix Marketcity, Bangalore",
-      ticketCode: "MOODGO-COM-2025-004",
+      ticketCode: "FESTIQ-COM-2025-004",
       type: "General",
       price: 399,
       status: "cancelled",
@@ -213,10 +213,10 @@ export const adminStats = {
 }
 
 export const adminUsers = [
-  { id: "u001", name: "Arjun Sharma", email: "arjun@moodgo.in", role: "user", status: "active", tickets: 18, joined: "Jan 2024", avatar: "https://i.pravatar.cc/32?img=8" },
-  { id: "u002", name: "Priya Mehta", email: "priya@moodgo.in", role: "organizer", status: "active", tickets: 5, joined: "Mar 2024", avatar: "https://i.pravatar.cc/32?img=5" },
-  { id: "u003", name: "Rohan Das", email: "rohan@moodgo.in", role: "user", status: "banned", tickets: 2, joined: "Feb 2024", avatar: "https://i.pravatar.cc/32?img=12" },
-  { id: "u004", name: "Sneha Iyer", email: "sneha@moodgo.in", role: "admin", status: "active", tickets: 0, joined: "Dec 2023", avatar: "https://i.pravatar.cc/32?img=16" }
+  { id: "u001", name: "Arjun Sharma", email: "arjun@festiq.in", role: "user", status: "active", tickets: 18, joined: "Jan 2024", avatar: "https://i.pravatar.cc/32?img=8" },
+  { id: "u002", name: "Priya Mehta", email: "priya@festiq.in", role: "organizer", status: "active", tickets: 5, joined: "Mar 2024", avatar: "https://i.pravatar.cc/32?img=5" },
+  { id: "u003", name: "Rohan Das", email: "rohan@festiq.in", role: "user", status: "banned", tickets: 2, joined: "Feb 2024", avatar: "https://i.pravatar.cc/32?img=12" },
+  { id: "u004", name: "Sneha Iyer", email: "sneha@festiq.in", role: "admin", status: "active", tickets: 0, joined: "Dec 2023", avatar: "https://i.pravatar.cc/32?img=16" }
 ]
 
 export const adminOrders = [
@@ -227,7 +227,7 @@ export const adminOrders = [
 ]
 
 export const coupons = [
-  { id: "c001", code: "MOODGO20", discount: "20%", type: "percent", active: true, used: 142, expires: "Apr 30, 2025" },
+  { id: "c001", code: "FESTIQ20", discount: "20%", type: "percent", active: true, used: 142, expires: "Apr 30, 2025" },
   { id: "c002", code: "FIRST500", discount: "₹500", type: "flat", active: true, used: 89, expires: "May 15, 2025" },
   { id: "c003", code: "SUNBURN10", discount: "10%", type: "percent", active: false, used: 312, expires: "Mar 1, 2025" }
 ]
@@ -251,7 +251,7 @@ export const chatMessages = [
   {
     id: "cm001",
     role: "bot",
-    message: "Hey! I'm MoodBot 🎉 Tell me your mood and I'll find the perfect events for you!",
+    message: "Hey! I'm Nova 🎉 Tell me your mood and I'll find the perfect events for you!",
     time: "10:00 AM",
     suggestions: ["I'm feeling energetic 🔥", "I want to chill 😌", "Surprise me! 🎲"]
   },

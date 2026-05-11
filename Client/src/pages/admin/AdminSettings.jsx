@@ -6,7 +6,7 @@ export default function AdminSettings() {
         <div className="space-y-4">
           <div>
             <label className="text-gray-500 text-xs uppercase tracking-wider">Platform Name</label>
-            <input type="text" defaultValue="MoodGo" className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 w-full text-sm mt-1" />
+            <input type="text" defaultValue="Festiq" className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50 w-full text-sm mt-1" />
           </div>
           <div>
             <label className="text-gray-500 text-xs uppercase tracking-wider">Default City</label>

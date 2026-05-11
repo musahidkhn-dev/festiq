@@ -4,9 +4,13 @@ import orderController from "../controller/orderController.js";
 
 const router = express.Router();
 
+// Static Routes FIRST
 router.get("/", protect.forUser, orderController.getTickets);
-router.get("/:tid", protect.forUser, orderController.getTicket);
-router.put("/:tid", protect.forUser, orderController.cancelTicket);
+
+// Dynamic Routes AFTER static routes
+router.get("/:id", protect.forUser, orderController.getTicket);
+router.put("/:id", protect.forUser, orderController.cancelTicket);
 router.post("/:eid", protect.forUser, orderController.bookTicket);
+router.patch("/:id/status", protect.forUser, orderController.updateCreatorOrderStatus);
 
 export default router;

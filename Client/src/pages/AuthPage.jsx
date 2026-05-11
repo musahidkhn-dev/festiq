@@ -1,11 +1,12 @@
 import { Mail, Lock, Eye, User, MapPin } from 'lucide-react'
-
+import PageTransition from "../components/animations/PageTransition";
 
 export default function AuthPage() {
 
 
 
   return (
+    <PageTransition>
     <div className="bg-[#0A0A0F] min-h-screen flex font-['DM_Sans']">
       {/* Left Panel */}
       <div className="hidden md:flex w-1/2 bg-[#0D0D15] relative overflow-hidden flex-col justify-between p-10">
@@ -13,7 +14,7 @@ export default function AuthPage() {
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
         <div className="relative z-10 flex items-center gap-1">
-          <span className="font-['Bebas_Neue'] text-2xl text-white tracking-wider">MoodGo</span>
+          <span className="font-['Bebas_Neue'] text-2xl text-white tracking-wider">Festiq</span>
           <span className="w-2 h-2 rounded-full bg-[#06FFA5]"></span>
         </div>
 
@@ -43,7 +44,7 @@ export default function AuthPage() {
           {/* Login Form */}
           <div>
             <h2 className="text-2xl font-bold text-white">Welcome back</h2>
-            <p className="text-gray-500 text-sm mt-1">Sign in to your MoodGo account</p>
+            <p className="text-gray-500 text-sm mt-1">Sign in to your Festiq account</p>
 
             <div className="mt-6 flex flex-col gap-4">
               <div className="relative">
@@ -86,7 +87,7 @@ export default function AuthPage() {
               <span className="text-white border-b-2 border-violet-500 pb-2 text-sm font-semibold">Register</span>
             </div>
             <h2 className="text-2xl font-bold text-white">Create your account</h2>
-            <p className="text-gray-500 text-sm mt-1">Join MoodGo and discover amazing events</p>
+            <p className="text-gray-500 text-sm mt-1">Join Festiq and discover amazing events</p>
 
             <div className="mt-6 flex flex-col gap-4">
               <div className="relative">
@@ -129,5 +130,6 @@ export default function AuthPage() {
         </div>
       </div>
     </div>
+    </PageTransition>
   )
 }

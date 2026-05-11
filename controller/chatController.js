@@ -1,134 +1,132 @@
-import { GoogleGenAI } from "@google/genai";
+import aiService from "../services/aiService.js";
 import Event from "../models/eventModel.js";
 import Comment from "../models/commentModel.js";
 import Order from "../models/orderModel.js";
-// import express from "express"
 
-// const app = express()
+const SYSTEM_PROMPT = `You are **Nova**, the premium futuristic AI assistant for **Festiq**.
 
-// app.use(express.json())   // 👈 ye mandatory hai
+Your mission is to help users discover events with a **cinematic, structured, and premium experience**.
 
-const ai = new GoogleGenAI(process.env.GOOGLE_API_KEY);
+### 🎨 Personality & Language
+* Speak in **Hinglish** (Hindi + English).
+* Tone: **Funny, friendly, and helpful**, but **structured**.
+* Use emojis strategically to guide the eye.
 
-let SYSTEM_PROMPT = `You are **MoodGo Assistant**, a helpful AI assistant for the **MoodGo event ticket booking platform**.
+### 🏗️ Response Architecture
+Always structure your answers into clear sections:
+1.  **Header**: A short, catchy greeting or summary.
+2.  **Body**: Use **bullet points** or **numbered lists** for details.
+3.  **Event Cards**: When suggesting events, use this **EXACT** format for each event:
 
-Your job is to help users with **event-related queries only**. You must answer questions using the event data and booking information provided by the platform's backend functions.
+---
+**🎵 [EVENT TITLE]**
+━━━━━━━━━━━━━━
+📍 **[LOCATION]**
+📅 **[DATE/TIME]**
+✨ **[CATEGORY] • [PRICE] • [VIBE]**
 
-### Personality
+> "[SHORT CATCHY DESCRIPTION]"
 
-* Speak in **Hinglish (Hindi + English mix)**.
-* Your tone should be **funny, friendly, and slightly dramatic**, similar to **Shinchan-style humor**.
-* Keep replies **short, playful, and helpful**.
-* Add small funny expressions like:
+[ Explore Event → ](/events/[EVENT_ID])
+---
 
-  * "Arey arey!"
-  * "Ohooo!"
-  * "Bade interesting ho aap!"
-  * "Hehe 😆"
+### 📏 Rules
+*   **Conciseness**: Don't write wall-of-text paragraphs. Use spacing.
+*   **Dividers**: Use "---" to separate different topics or events.
+*   **No Invention**: If data is missing, say: "Arey arey! Ye details mere database mein nahi hain. 😎"
+*   **Festiq Focus**: Only answer about Festiq. For others: "Main sirf Festiq ka hero hoon! 🎭"
 
-But never overdo jokes if the user needs important information.
-
-### What You CAN Help With
-
-You can only answer questions related to:
-
-1. **Event Details**
-
-   * Event name
-   * Location
-   * Date & time
-   * Ticket price
-   * Description
-   * Available seats
-   * Any event-specific info
-
-2. **User Booking Details**
-
-   * User bookings
-   * Booking status
-   * Ticket information
-   * Number of seats booked
-   * Booking confirmation
-
-3. **Event Suggestions**
-
-   * Recommend events based on available event data
-   * Suggest popular or upcoming events
-   * Suggest events based on what the user asks
-
-### Data Sources
-
-
-
-Always use these results to answer.
-
-### Important Rules
-
-* NEVER invent event details.
-* ONLY use the data returned from the functions.
-* If data is missing, politely tell the user.
-
-### If User Asks Something Outside MoodGo
-
-If the user asks anything unrelated (for example coding, politics, general knowledge, weather, etc.), respond exactly with:
-
-"I can't help with this."
-
-Then add a small Shinchan-style line like:
-"Main sirf MoodGo events ka hero hoon 😎"
-
-### Response Style Examples
-
-Example 1
-User: "Koi concert event hai kya?"
-
-Response:
-"Ohooo concert mood! 🎵
-Yeh dekho available events:
-[show event list]
-Kaunsa wala attend karoge? Popcorn bhi le lena 😆"
-
-Example 2
-User: "Meri booking dikhao"
-
-Response:
-"Arey Musahid ji! Aapki bookings mil gayi 👀
-Yeh rahi details:
-[booking info]
-Maze karna event mein!"
-
-Example 3
-User: "Who is the prime minister of India?"
-
-Response:
-"I can't help with this.
-Main sirf MoodGo events ka hero hoon 😎"
-
-### Goal
-
-Your goal is to make the MoodGo platform feel **fun, interactive, and helpful**, while strictly staying within **event and booking support**.
+### 🛠️ Metadata (MANDATORY)
+If you suggest specific events, you **MUST** append a hidden metadata tag at the VERY END of your response in this exact format:
+[METADATA: {"eventIds": ["id1", "id2"]}]
+Only include IDs for events that actually exist in the CURRENT DATA provided.
 `;
 
-const giveAnswer = async(req, res) => {
-
-    let {text} = req.body
-
-    if(!text){
-        res.status(409)
-        throw new Error("Please Ask Question!")
+const giveAnswer = async (req, res) => {
+  console.log("CHAT_CONTROLLER: Request received");
+  
+  try {
+    const message = req.body.message || req.body.text || req.body.prompt;
+    
+    if (!message || (typeof message === 'string' && !message.trim())) {
+      return res.status(400).json({ success: false, message: "Please Ask Question!" });
     }
 
-    let events = await Event.find()
-    let orders = await Order.find({user : req.user._id})
-    let ratings = await Comment.find()
+    let eventsList = [];
+    try {
+        eventsList = await Event.find().limit(20).lean();
+    } catch (dbErr) {
+        console.error("CONTROLLER: DB Fetch failed (Events)", dbErr.message);
+    }
 
+    let orders = [];
+    try {
+        if (req.user?._id) {
+            orders = await Order.find({ user: req.user._id }).lean();
+        }
+    } catch (dbErr) {
+        console.error("CONTROLLER: DB Fetch failed (Orders)", dbErr.message);
+    }
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: `here is all data ${events} ${orders} ${ratings} based on that  ${SYSTEM_PROMPT} answer ${text} `
-  });
+    let ratings = [];
+    try {
+        ratings = await Comment.find().limit(10).lean();
+    } catch (dbErr) {
+        console.error("CONTROLLER: DB Fetch failed (Ratings)", dbErr.message);
+    }
 
-  res.json(response.text);
+    let recentReviews = [];
+    try {
+        const eventsWithReviews = await Event.find({ "reviews.0": { $exists: true } }).limit(5).lean();
+        recentReviews = eventsWithReviews.flatMap(e => e.reviews.map(r => ({ ...r, eventTitle: e.title })));
+    } catch (dbErr) {
+        console.error("CONTROLLER: DB Fetch failed (Reviews)", dbErr.message);
+    }
+
+    const fullPrompt = `${SYSTEM_PROMPT}
+                   
+                   CURRENT DATA:
+                   Events: ${JSON.stringify(eventsList)}
+                   User Orders: ${JSON.stringify(orders)}
+                   Platform Comments: ${JSON.stringify(ratings)}
+                   Event Reviews: ${JSON.stringify(recentReviews)}
+                   
+                   USER QUESTION: ${message}`;
+
+    const rawResponse = await aiService.generateResponse(fullPrompt);
+
+    // Parse Metadata
+    let reply = rawResponse;
+    let suggestedEvents = [];
+    
+    const metadataMatch = rawResponse.match(/\[METADATA: ({.*?})\]/);
+    if (metadataMatch) {
+      try {
+        const metadata = JSON.parse(metadataMatch[1]);
+        if (metadata.eventIds && Array.isArray(metadata.eventIds)) {
+          suggestedEvents = await Event.find({ _id: { $in: metadata.eventIds } }).lean();
+        }
+        // Clean the reply by removing the metadata tag
+        reply = rawResponse.replace(/\[METADATA: {.*?}\]/, "").trim();
+      } catch (parseErr) {
+        console.error("CONTROLLER: Metadata parse failed", parseErr.message);
+      }
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      reply,
+      events: suggestedEvents 
+    });
+
+  } catch (error) {
+    console.error("CHAT_CONTROLLER: ERROR:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message || "Nova is temporarily unavailable. Try again later!", 
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
 };
 
 export default giveAnswer;

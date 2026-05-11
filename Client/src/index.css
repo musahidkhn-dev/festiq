@@ -1,1 +1,168 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&display=swap');
+
+@theme {
+  --font-bebas: "Bebas Neue", cursive;
+  --font-dm: "DM Sans", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  
+  --color-violet-neon: #8b5cf6;
+  --color-blue-neon: #3b82f6;
+  --color-emerald-neon: #10b981;
+  --color-pink-neon: #ec4899;
+  --color-dark-bg: #050508;
+  --color-dark-surface: #0A0A10;
+  --color-glass: rgba(255, 255, 255, 0.03);
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-white font-dm selection:bg-violet-500/30 overflow-x-hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bebas tracking-wider;
+  }
+}
+
+@layer components {
+  /* PREMIUM GLASS SYSTEM */
+  .glass-panel {
+    @apply bg-white/[0.02] backdrop-blur-2xl border border-white/[0.05] shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
+  }
+  
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-lg border border-white/10 hover:border-white/20 transition-all duration-500;
+  }
+
+  /* CINEMATIC EFFECTS */
+  .text-glow {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+
+  .mesh-gradient {
+    background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+  }
+
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    opacity: 0.03;
+    z-index: 9999;
+    pointer-events: none;
+    /* PURE CSS NOISE */
+    background-image: 
+      repeating-radial-gradient(#fff 0 0.0001%,#000 0 0.0002%) 50% 0/2500px 2500px,
+      repeating-conic-gradient(#fff 0 0.0001%,#000 0 0.0002%) 50% 50%/2500px 2500px;
+    background-blend-mode: difference;
+    filter: brightness(0.5) contrast(1.2);
+  }
+
+  /* CUSTOM BUTTONS */
+  .btn-premium {
+    @apply relative px-8 py-3 rounded-xl font-bold transition-all duration-300 overflow-hidden flex items-center justify-center gap-2;
+  }
+
+  .btn-premium::before {
+    @apply absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 opacity-0 transition-opacity duration-300;
+    content: "";
+  }
+
+  .btn-premium:hover::before {
+    @apply opacity-100;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-violet-500/50 transition-colors;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+@layer utilities {
+  .aurora-bg {
+    @apply absolute inset-0 overflow-hidden;
+    filter: blur(100px);
+    z-index: -1;
+  }
+  
+  .aurora-layer {
+    @apply absolute w-[80vw] h-[80vh] rounded-full mix-blend-screen opacity-20;
+    filter: blur(60px);
+    animation: aurora-float 20s infinite alternate;
+  }
+
+  .spotlight-overlay {
+    background: radial-gradient(
+      circle at var(--x, 50%) var(--y, 50%), 
+      rgba(139, 92, 246, 0.1) 0%, 
+      transparent 50%
+    );
+  }
+  
+  .magnetic-wrap {
+    @apply transition-transform duration-300 ease-out;
+  }
+}
+
+@keyframes aurora-float {
+  0% { transform: translate(-10%, -10%) rotate(0deg); }
+  50% { transform: translate(10%, 10%) rotate(180deg); }
+  100% { transform: translate(-10%, -10%) rotate(360deg); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline-effect {
+  @apply absolute inset-0 overflow-hidden pointer-events-none opacity-[0.03];
+  background: linear-gradient(to bottom, transparent, #fff, transparent);
+  height: 100px;
+  animation: scanline 8s linear infinite;
+}
+

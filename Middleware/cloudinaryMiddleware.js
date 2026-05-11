@@ -18,9 +18,20 @@ const uploadToCloudinary = async (fileLink) => {
   .catch((error) => {
     console.log(error)
     //if failes remove file from server
-    fs.unlinksync(fileLink)
+    fs.unlinkSync(fileLink)
   })
   return uploadResult
 };
 
-export default uploadToCloudinary
+const deleteFromCloudinary = async (publicId) => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export { uploadToCloudinary, deleteFromCloudinary };
+export default uploadToCloudinary;

@@ -1,5 +1,5 @@
 {
-  "name": "moodgo",
+  "name": "festiq",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -11,13 +11,14 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
-    "@google/genai": "^1.44.0",
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
-    "color": "^5.0.3",
     "colors": "^1.4.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.1",
     "multer": "^2.0.2"
