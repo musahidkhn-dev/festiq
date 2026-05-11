@@ -5,8 +5,12 @@ import { toast } from 'react-toastify';
  * Axios Instance Configuration
  * Standardized to hit the backend port 8080 directly with CORS credentials.
  */
+const API_BASE_URL = import.meta.env.PROD
+  ? `${window.location.origin}/api`
+  : 'http://localhost:8080/api';
+
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -53,7 +57,7 @@ axiosInstance.interceptors.response.use(
           window.__authExpiredToastFired = true;
           toast.dismiss();
           toast.error("Session expired. Please log in again.");
-          
+
           setTimeout(() => {
             window.__authExpiredToastFired = false;
           }, 5000);
@@ -66,7 +70,7 @@ axiosInstance.interceptors.response.use(
     } else {
       // Improved error reporting
       const message = error.response?.data?.message || error.message || "Network Error: Could not connect to backend.";
-      
+
       // Don't show toast for chat specific errors to allow component-level handling
       if (error.config && error.config.url && !error.config.url.includes('/chat')) {
         toast.error(message);
