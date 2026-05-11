@@ -106,7 +106,7 @@ app.post("/api/chat", protect.optional, giveAnswer);
 // Serve Frontend Build
 app.use(express.static(path.join(__dirname, "Client/dist")));
 
-app.get("*", (req, res) => {
+app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(__dirname, "Client/dist", "index.html"));
 });
 
