@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 // Flexible CORS for multiple dev ports
-const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"];
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://festiq.onrender.com"];
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -47,7 +47,7 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.options(/.*/, cors(corsOptions)); // Enable pre-flight for all routes (Regex literal for Express 5)
+app.options(cors(corsOptions)); // Enable pre-flight for all routes (Regex literal for Express 5)
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -105,12 +105,10 @@ console.log("SERVER: Registering /api/chat route with optional protection...");
 app.post("/api/chat", protect.optional, giveAnswer);
 
 // Serve Frontend Build
-const rootDir = process.cwd();
-
-app.use(express.static(path.join(rootDir, "Client/dist")));
+app.use(express.static(path.join(__dirname, "Client/dist")));
 
 app.use((req, res) => {
-  res.sendFile(path.join(rootDir, "Client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "Client/dist/index.html"));
 });
 
 // Error Handler
