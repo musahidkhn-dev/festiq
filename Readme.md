@@ -1,6 +1,6 @@
-# 🎉 MoodGo — AI-Powered Event Booking Platform
+# 🎉 Festiq — AI-Powered Event Booking Platform
 
-MoodGo is a full-stack MERN application that lets users **discover, create, and book events** while interacting with an intelligent AI chatbot for instant assistance about pricing, schedules, recommendations, and more.
+Festiq is a full-stack MERN application that lets users **discover, create, and book events** while interacting with an intelligent AI chatbot for instant assistance about pricing, schedules, recommendations, and more.
 
 It blends social event discovery with smart automation to make event planning and booking seamless.
 
